@@ -1,65 +1,97 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
-    <meta charset="UTF-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1"/>
-    <meta name="renderer" content="webkit"/>
-    <title>vue-dragging</title>
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"/>
-    <script src="https://cdn.bootcss.com/vue/2.2.6/vue.js"></script>
-    <!-- <script src="https://cdn.bootcss.com/vue/1.0.28/vue.js"></script> -->
-    <script type="text/javascript" src="./vue-dragging.es5.js"></script>
-    <style>
-        body{font-family:Helvetica,sans-serif}
-        .playground {
-            display: flex;
-            margin-top: 4rem;
-        }
-        .color-item {
-            background: #f5f5f5;
-            padding: .5rem;
-            color: #5f5f5f;
-            transition: transform .3s;
-        }
-        .color-item.dragging {
-            background-color: #fff;
-        }
-        .color-show {
-            display: flex;
-            flex-wrap: wrap;
-            width: 30rem;
-        }
-        .color-box {
-            width: 33%;
-            height: 6rem;
-            background: #efefef;
-            line-height: 6rem;
-            text-align: center;
-            color: #fff;
-            transition: transform .3s;
-        }
-        .color-box.dragging {
-            transform: scale(1.1);
-        }
-        .in-out-translate-fade-enter-active, .in-out-translate-fade-leave-active {
-          transition: all .5s;
-        }
-        .in-out-translate-fade-enter, .in-out-translate-fade-leave-active {
-          opacity: 0;
-        }
-        .in-out-translate-fade-enter {
-          transform: translate3d(100%, 0, 0);
-        }
-        .in-out-translate-fade-leave-active {
-          transform: translate3d(-100%, 0, 0);
-        }
-    </style>
+  <title>移动端：vue-dragging-touch</title>
+  <meta charset="utf-8">
+  <!--<meta content="{{ csrf_token() }}" name="csrf-token">-->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, minimal-ui" name="viewport">
+  <meta content="yes" name="apple-mobile-web-app-capable">
+  <meta content="black" name="apple-mobile-web-app-status-bar-style">
+  <meta content="telephone=no" name="format-detection">
+  <!-- HTTP 1.0 -->
+  <meta http-equiv="pragma" content="no-cache" />
+  <!-- HTTP 1.1 -->
+  <meta http-equiv="cache-control" content="no-store, no-cache, must-revalidate, max-age=0">
+  <meta content="email=no" name="format-detection">
+  <!-- Prevent caching at the proxy server -->
+  <meta http-equiv="expires" content="0" />
+  <style>
+  body {
+    font-family: Helvetica, sans-serif
+  }
+
+  .playground {
+    position: relative;
+    margin-top: 4rem;
+  }
+  
+  .color-list {
+    width: 100%;
+    height: 15rem;
+    background: #efefef;
+    overflow: hidden;
+    /*line-height: 6rem;*/
+    /*text-align: center;*/
+    /*color: #fff;*/
+    /*transition: transform .3s;*/
+  }
+  .color-item {
+    /*background: #f5f5f5;*/
+    /*padding: .5rem;*/
+    /*color: #5f5f5f;*/
+    float: left;
+    width: 25%;
+    display: block;
+    padding-bottom: 0.3rem;
+    /*transition: transform .3s;*/
+  }
+  .item_img{
+    display: block;
+    width: 5rem;
+    height: 5rem;
+  }
+
+  .color-box.dragging {
+    transform: scale(1.1);
+  }
+
+  .in-out-translate-fade-enter-active,
+  .in-out-translate-fade-leave-active {
+    transition: all .5s;
+  }
+
+  .in-out-translate-fade-enter,
+  .in-out-translate-fade-leave-active {
+    opacity: 0;
+  }
+
+  .in-out-translate-fade-enter {
+    transform: translate3d(100%, 0, 0);
+  }
+
+  .in-out-translate-fade-leave-active {
+    transform: translate3d(-100%, 0, 0);
+  }
+  /* 需要自定义拖拽图片的样式 */
+  .fn-hide{display: none;}
+  .vue_dnd_img {
+    position: absolute;
+    width: 5rem;
+    height: 5rem;
+    z-index: 100;
+    box-shadow: 0 0 0.3rem 5px #3B5999;
+    border-radius: 5px;
+  }
+  </style>
 </head>
+
 <body>
-    <div id="root">
-        <div class="playground">
-            <!-- vue1 test -->
-            <!-- <div class="color-list">
+  <div id="app">
+    <div class="playground">
+      <h2 style="text-align: center;">移动端： 拖拽</h2>
+      <!-- vue1 test -->
+      <!-- <div class="color-list">
                 <div 
                 class="color-item" 
                 v-for="color in colors" 
@@ -74,109 +106,38 @@
                 {{color.text}}
                 </div>
             </div> -->
-            <!-- vue2 test -->
-            <div class="color-list">
-                <div
-                class="color-item" 
-                v-for="color in colors" 
-                v-dragging="{ list: colors, item: color, group: 'color' }"
-                :key="color.text">
-                {{color.text}}
-                </div>
-            </div>
-            <div class="color-show">
-                <div 
-                v-for="color in colors"
-                v-dragging="{ list: colors, item: color, group: 'color' }"
-                class="color-box" 
-                :style="{'background-color': color.text}"
-                :key="color.text">
-                {{color.text}}
-                </div>
-            </div>
-            <button @click="test">test-bug</button>
-            <div class="color-show" v-if="colorShow">
-                <div
-                v-for="color in colors2"
-                v-dragging="{ list: colors2, item: color, group: 'color2' }"
-                class="color-box"
-                :style="{'background-color': color.text}"
-                :key="color.text">
-                {{color.text}}
-                </div>
-            </div>
+      <!-- vue2 test -->
+      <div class="color-list">
+        <div class="color-item" 
+          v-for="(item, index) in images" 
+          v-dragging="{ list: images, item: item, group: 'item' }" 
+          :key="index">
+          <img :src="item" alt="" class="item_img">
         </div>
+      </div>
     </div>
-    <script>
-        Vue.use(VueDragging)
-        new Vue({
-            el: '#root',
-            data: {
-                colors: [{
-                text: "Aquamarine"
-             }, {
-                 text: "Hotpink"
-             }, {
-                 text: "Gold"
-             }, {
-                 text: "Crimson"
-             }, {
-                 text: "Blueviolet"
-             }, {
-                 text: "Lightblue"
-             }, {
-                 text: "Cornflowerblue"
-             }, {
-                 text: "Skyblue"
-             }],
-                colors2: [{
-                 text: "Aquamarine"
-             }, {
-                 text: "Hotpink"
-             }, {
-                 text: "Gold"
-             }, {
-                 text: "Crimson"
-             }, {
-                 text: "Blueviolet"
-             }, {
-                 text: "Lightblue"
-             }],
-             colorShow: true
-            },
-            methods: {
-                test: function () {
-                    this.colors = [{
-                        text: "Aquamarine"
-                    }, {
-                        text: "Hotpink"
-                    }, {
-                        text: "Gold"
-                    }, {
-                        text: "Crimson"
-                    }, {
-                        text: "Blueviolet"
-                    }, {
-                        text: "Lightblue"
-                    }, {
-                        text: "Cornflowerblue"
-                    }, {
-                        text: "Skyblue"
-                    }, {
-                        text: "Burlywood"
-                    }]
-                 this.colorShow = !this.colorShow
-                }
-            },
-            mounted: function() {
-                this.$dragging.$on('dragged', function(data) {
-                    console.log('dragged', data)
-                })
-                this.$dragging.$on('dragend', function(data) {
-                    console.log('dragend', data)
-                })
-            }
-        })
-    </script>
+  </div>
+  <script src="https://cdn.bootcss.com/vue/2.5.13/vue.js"></script>
+  <!-- <script src="https://cdn.bootcss.com/vue/1.0.28/vue.js"></script> -->
+  <script type="text/javascript" src="./vue-dragging.es5.js"></script>
+  <script>
+  Vue.use(VueDragging)
+  new Vue({
+    el: '#app',
+    data: {
+      images: [
+        'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1525844618926&di=7e2749fc29fd3d9610e316b35018c5af&imgtype=0&src=http%3A%2F%2Fwww.leewiart.com%2Fuserfiles%2F2267%2Fbbe6dd23c079f7735eead9d61ef6cb4e_thumb_250.jpg',
+        'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1525844619483&di=23ac22af47957039d69d31a915065124&imgtype=0&src=http%3A%2F%2Fpic.qqtn.com%2Fup%2F2017-11%2F15108872816081556.jpg',
+        'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1525844688007&di=d8221944c83b66b949038b13336c9aa4&imgtype=jpg&src=http%3A%2F%2Fimg1.imgtn.bdimg.com%2Fit%2Fu%3D1760343206%2C1524426068%26fm%3D214%26gp%3D0.jpg',
+        'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1525844619482&di=4e7469a75028a7937c1e1755f6b836b9&imgtype=0&src=http%3A%2F%2Fpic.qqtn.com%2Fup%2F2017-12%2F2017122215432680250.jpg',
+        'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1525844727071&di=c9abdd01755b8213439b603ccdee8504&imgtype=0&src=http%3A%2F%2Fimg.52z.com%2Fupload%2Fnews%2Fimage%2F20171127%2F20171127101421_29444.jpg',
+        'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1208418530,639695975&fm=27&gp=0.jpg',
+        'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1525870170340&di=60f38d671e233a2ae4935983e329bcd7&imgtype=0&src=http%3A%2F%2Fphotocdn.sohu.com%2F20110804%2FImg315452237.jpg',
+        'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1525870414437&di=34976541bf801013c20a6d23d82ab9ae&imgtype=jpg&src=http%3A%2F%2Fimg3.imgtn.bdimg.com%2Fit%2Fu%3D857832888%2C212836411%26fm%3D214%26gp%3D0.jpg'
+      ]
+    }
+  })
+  </script>
 </body>
+
 </html>

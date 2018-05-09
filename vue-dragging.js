@@ -95,11 +95,12 @@ export default function(Vue) {
   imgMove.src = ''
   _.addClass(imgMove, 'vue_dnd_img', 'fn-hide')
   parentTT.appendChild(imgMove)
+  imgMove = document.querySelector('.vue_dnd_img');
 
   // 动态设置拖拽元素的定位
-  function setDragImage(x, y) {
-    imgMove.style.left = (x - 40) + 'px';
-    imgMove.style.top = (y - 40) + 'px';
+  function setDragImage(el, x, y) {
+    el.style.left = (x - 40) + 'px';
+    el.style.top = (y - 40) + 'px';
   }
 
   function handleTouchStart(e) {
@@ -110,7 +111,8 @@ export default function(Vue) {
     const touch = e.touches[0]
     if (item) {
       indexFrom = drag_key
-      setDragImage(touch.clientX, touch.clientY)
+      imgMove = document.querySelector('.vue_dnd_img')
+      setDragImage(imgMove, touch.clientX, touch.clientY)
       imgMove.src = item
       _.removeClass(imgMove, 'fn-hide')
     }
@@ -128,7 +130,7 @@ export default function(Vue) {
     e.stopPropagation();
     e.preventDefault();
     touchFinal = e.touches[0];
-    setDragImage(touchFinal.clientX, touchFinal.clientY)
+    setDragImage(imgMove, touchFinal.clientX, touchFinal.clientY)
   }
 
   function handleTouchEnd() {
