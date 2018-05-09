@@ -2,7 +2,7 @@
   "license": "MIT",
   "main": "vue-dragging.es5.js",
   "name": "vue-dnd-touch",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "makes your elements draggable in Vue",
   "scripts": {
     "karma-run": "karma run",

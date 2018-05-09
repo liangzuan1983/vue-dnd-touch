@@ -95,12 +95,12 @@ export default function(Vue) {
   imgMove.src = ''
   _.addClass(imgMove, 'vue_dnd_img', 'fn-hide')
   parentTT.appendChild(imgMove)
-  imgMove = document.querySelector('.vue_dnd_img');
+  imgMove = document.querySelector('.vue_dnd_img')
 
   // 动态设置拖拽元素的定位
   function setDragImage(el, x, y) {
-    el.style.left = (x - 40) + 'px';
-    el.style.top = (y - 40) + 'px';
+    el.style.left = (x - 40) + 'px'
+    el.style.top = (y - 40) + 'px'
   }
 
   function handleTouchStart(e) {
@@ -127,9 +127,9 @@ export default function(Vue) {
   }
 
   function handleTouchMove(e) {
-    e.stopPropagation();
-    e.preventDefault();
-    touchFinal = e.touches[0];
+    e.stopPropagation()
+    e.preventDefault()
+    touchFinal = e.touches[0]
     setDragImage(imgMove, touchFinal.clientX, touchFinal.clientY)
   }
 
