@@ -8,7 +8,8 @@ import uglify from 'rollup-plugin-uglify';
 export default {
   entry: 'vue-dragging.js',
   dest: 'vue-dragging.es5.js',
-  format: 'es',
+  format: 'umd',
+  moduleName: 'VueDragging',
   plugins: [
     babel({exclude: 'node_modules/**'}),
     eslint({exclude: 'node_modules/**'}),
